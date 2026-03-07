@@ -110,6 +110,7 @@ ollama run mistral
 check available models in Ollama
 ```
 curl http://${OLLAMA_BASE_URL}/api/tags
+
 {"models":[{"name":"qwen3:8b","model":"qwen3:8b","modified_at":"2026-02-25T21:23:15.257280472Z","size":5225388164,"digest":"500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41","details":{"parent_model":"","format":"gguf","family":"qwen3","families":["qwen3"],"parameter_size":"8.2B","quantization_level":"Q4_K_M"}},{"name":"qwen3-embedding:8b","model":"qwen3-embedding:8b","modified_at":"2026-02-25T21:23:15.257254472Z","size":4676805193,"digest":"64b933495768fbd3b87c20583d379728a07471e0c66733a9df87cd1901b3c44b","details":{"parent_model":"","format":"gguf","family":"qwen3","families":["qwen3"],"parameter_size":"7.6B","quantization_level":"Q4_K_M"}}]}
 ```
 
