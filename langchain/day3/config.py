@@ -13,6 +13,7 @@ TEMPERATURE = 0.3         # Lower for factual QA
 TOP_P = 0.9
 TOP_K = 40
 
+
 # RAG settings
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 200
