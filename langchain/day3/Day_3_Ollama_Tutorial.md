@@ -38,11 +38,6 @@ ollama list
 cd /home/system/teaching/langchain/day3
 pip install -r requirements.txt
 ```
-
-Key components:
-| Package | Purpose |
-|---|---|
-| `langchain` | Core framework |
 | `langchain-ollama` | Ollama LLM + Embeddings wrappers |
 | `faiss-cpu` | Vector similarity search |
 | `pypdf` | PDF text extraction |
@@ -83,7 +78,6 @@ PDF Documents
 User Question
     ↓
 [5. Retrieve] → FAISS finds top-K similar chunks
-    ↓
 [6. Generate] → ChatOllama answers using retrieved context
     ↓
 Answer with source citations
@@ -91,7 +85,6 @@ Answer with source citations
 
 ---
 
-### Step 1: Load PDF Documents
 
 ```python
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
@@ -110,9 +103,7 @@ def load_documents(pdf_dir="docs"):
 
 **What happens here:**
 - `DirectoryLoader` scans the `docs/` folder for all `.pdf` files.
-- `PyPDFLoader` extracts text from each page → each page becomes one `Document` object.
 - Each document carries `metadata` with `source` (filename) and `page` number.
-
 **Try it:**
 ```python
 docs = load_documents()
@@ -130,9 +121,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 def split_documents(docs):
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,       # max characters per chunk
-        chunk_overlap=200,     # overlap between adjacent chunks
         separators=["\n\n", "\n", ". ", " ", ""],
-    )
     chunks = splitter.split_documents(docs)
     print(f"[split] {len(chunks)} chunks")
     return chunks
@@ -153,9 +142,7 @@ def split_documents(docs):
 **Visual example:**
 ```
 Original text: [A A A A A|B B B B B|C C C C C]
-
 No overlap:    [A A A A A] [B B B B B] [C C C C C]
-                     ↑ sentence cut here is lost
 
 With overlap:  [A A A A A B B] [A B B B B B C C] [B C C C C C]
                   overlap ^^^     overlap ^^^
@@ -199,7 +186,6 @@ Similar meanings → vectors close together → FAISS finds them fast.
 ---
 
 ### Step 4: Build the RAG Chain
-
 ```python
 from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
@@ -218,7 +204,6 @@ def build_rag_chain(vectorstore):
          "If the context is insufficient, say so. Cite sources.\n\n"
          "Context:\n{context}"),
         ("human", "{question}"),
-    ])
 
     llm = ChatOllama(
         base_url="http://localhost:11434",
@@ -229,7 +214,6 @@ def build_rag_chain(vectorstore):
     def format_docs(docs):
         return "\n\n---\n\n".join(
             f"[Source: {d.metadata.get('source','?')}, "
-            f"page {d.metadata.get('page','?')}]\n{d.page_content}"
             for d in docs
         )
 
@@ -242,26 +226,19 @@ def build_rag_chain(vectorstore):
     return chain, retriever
 ```
 
-**Chain flow explained:**
 
 ```
 User question: "What was total revenue?"
     │
     ├─→ retriever | format_docs
-    │       │
     │       └─→ FAISS finds 3 most similar chunks
     │           └─→ format_docs joins them with source citations
     │               → becomes {context}
-    │
-    └─→ RunnablePassthrough()
             └─→ question string passes through unchanged
-                → becomes {question}
     │
     ↓
     prompt.format(context=..., question=...)
-    ↓
     ChatOllama generates answer grounded in context
-    ↓
     StrOutputParser extracts text
     ↓
     "Total revenue was $X million (Source: report.pdf, page 5)"
@@ -686,19 +663,6 @@ ensemble = EnsembleRetriever(
 )
 ```
 
-### Quick Comparison
-
-| Strategy | Accuracy | Speed | Complexity | Best For |
-|---|---|---|---|---|
-| **Multi-Query** | ⭐⭐⭐⭐ | Medium | Low | General improvement |
-| **MMR** | ⭐⭐⭐ | Fast | Minimal | Diverse results |
-| **Contextual Compression** | ⭐⭐⭐⭐⭐ | Slow | Medium | Precision-critical |
-| **Enrich Metadata** | ⭐⭐⭐ | Fast | Low | Structured documents |
-| **Ensemble (combined)** | ⭐⭐⭐⭐⭐ | Slow | High | Production systems |
-
-**Recommendation:** Start with **MMR** (one-line change) + **Multi-Query** for significant improvement with minimal code changes.
-
----
 
 ## ⭐ Advanced Extensions
 

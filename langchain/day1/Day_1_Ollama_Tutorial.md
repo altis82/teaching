@@ -30,37 +30,21 @@ Ollama is a command-line tool that simplifies running large language models loca
 
 **macOS:**
 ```bash
-# Download from https://ollama.ai
-# Or use Homebrew:
-brew install ollama
-```
 
 **Linux:**
 ```bash
 # Ubuntu/Debian
-curl -fsSL https://ollama.ai/install.sh | sh
-
-# Or download from https://ollama.ai/download
-```
 
 <!-- **Windows:**
-```bash
-# Download installer from https://ollama.ai/download/windows
-# Or use winget:
-winget install ollama
-``` -->
-
 ### Step 2: Start the Ollama Server
 
 Open a terminal and run:
 ```bash
 ollama serve
 ```
-
 This starts the Ollama daemon on `http://localhost:11434`
 
-You should see:
-```
+![alt text](image.png)
 Starting Ollama...
 Listening on 127.0.0.1:11434
 ```
@@ -210,9 +194,6 @@ from config import (
 )
 
 
-# Define output structure
-class BlogTitles(BaseModel):
-    """Blog title generator output"""
     titles: List[str] = Field(
         description=f"List of {NUM_TITLES} creative and engaging blog titles"
     )
@@ -220,10 +201,6 @@ class BlogTitles(BaseModel):
         description="Brief explanation of the title strategy"
     )
 
-
-# Initialize Ollama LLM
-def initialize_ollama():
-    """Connect to local Ollama instance"""
     print(f"🤖 Connecting to Ollama at {OLLAMA_BASE_URL}")
     print(f"📚 Using model: {OLLAMA_MODEL}")
     
@@ -245,27 +222,11 @@ def create_template():
     template = """You are an expert SEO content strategist and blog writer.
 Your task is to generate {num_titles} creative, engaging, and SEO-optimized blog titles.
 
-Blog Topic: {topic}
-
-Requirements for the titles:
-1. Make them attention-catching and compelling
-2. Include relevant keywords naturally
-3. Keep them between 5-10 words
-4. Vary the style (how-to, listicle, question, thought-leadership)
 5. Make them suitable for the target audience
 
-Generate exactly {num_titles} titles and provide a brief strategy explanation.
-
-Format your response as JSON with this exact structure:
-{{
     "titles": ["Title 1", "Title 2", "Title 3", "Title 4", "Title 5"],
     "summary": "Brief explanation of the title strategy used"
-}}
-
-Remember: The titles should be clickable, memorable, and optimized for search engines."""
-
     return PromptTemplate(
-        input_variables=["topic", "num_titles"],
         template=template
     )
 

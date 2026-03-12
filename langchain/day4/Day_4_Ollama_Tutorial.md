@@ -1,5 +1,22 @@
 # Day 4 – Intelligent Agent with Tools and Reasoning (Advanced)
 
+## 🧩 Problem Overview
+
+Today problem, you may want an agent to:
+- Analyze sales data and calculate profit margins for each month.
+- Discover which files are available and select the right one to use.
+- Perform multi-step calculations, such as projecting future values based on current data.
+- Combine reasoning, tool use, and step-by-step logic to answer complex queries.
+
+The challenge: How do you build an agent that can reason, decide which tools to use, and execute a sequence of actions to solve a problem—rather than just follow a fixed pipeline?
+
+In this lab, you'll implement an agent that can:
+- Interpret user questions.
+- Choose and call the right tools (calculator, CSV analyzer, file lister).
+- Chain together multiple steps to reach a final answer.
+
+This approach is essential for building assistants that can handle open-ended, dynamic tasks in production environments.
+
 ## 🎯 Learning Objectives
 
 Build an AI agent that can **reason** about problems, **decide** which tools to use, and **execute** multi-step tasks autonomously using the ReAct pattern.
@@ -58,6 +75,16 @@ day4/
 | Tools | Cannot call external functions | Can call tools based on need |
 | Reasoning | None – just follows the pipeline | Thinks about what to do next |
 | Use case | Predictable pipelines | Open-ended problem solving |
+
+### Why Do We Need LangGraph?
+
+LangGraph is essential for building advanced agents because it provides:
+- **Structured Reasoning Loops:** LangGraph enables the ReAct pattern, allowing agents to think, act, observe, and repeat until a task is solved.
+- **Tool Integration:** It makes it easy to connect multiple tools and let the agent decide which to use, based on the problem.
+- **Production Reliability:** LangGraph handles agent state, recursion limits, and error handling, making agents robust for real-world use.
+- **Flexible Workflows:** Unlike simple chains, LangGraph lets you design dynamic workflows where the agent can branch, loop, and adapt its strategy.
+
+Without LangGraph, agents would be limited to fixed pipelines or require complex, error-prone custom code to manage reasoning and tool use. LangGraph simplifies agent orchestration, making it practical to build intelligent, safe, and extensible AI assistants.
 
 ### The ReAct Pattern
 
